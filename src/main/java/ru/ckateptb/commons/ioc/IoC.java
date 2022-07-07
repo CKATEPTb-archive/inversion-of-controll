@@ -11,7 +11,10 @@ import ru.ckateptb.commons.ioc.utils.FinderUtils;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class IoC {
@@ -41,7 +44,7 @@ public class IoC {
                 classes.add(clazz);
             }
             List<BeanProcessor> processors = new ArrayList<>();
-            for(Class<?> clazz : classes) {
+            for (Class<?> clazz : classes) {
                 processors.add(new BeanProcessor(clazz));
             }
             for (BeanProcessor processor : processors) {
@@ -81,7 +84,7 @@ public class IoC {
     private static void registerImplementation(Class<?> clazz) {
         classImplementations.put(clazz, clazz);
         Class<?> superClass = clazz.getSuperclass();
-        if(!superClass.getName().equals("java.lang.Object")) {
+        if (!superClass.getName().equals("java.lang.Object")) {
             classImplementations.put(superClass, clazz);
             registerImplementation(superClass);
         }

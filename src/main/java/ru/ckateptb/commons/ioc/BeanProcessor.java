@@ -3,21 +3,22 @@ package ru.ckateptb.commons.ioc;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import ru.ckateptb.commons.ioc.annotation.Autowired;
-import ru.ckateptb.commons.ioc.annotation.Component;
 import ru.ckateptb.commons.ioc.annotation.Qualifier;
 import ru.ckateptb.commons.ioc.exception.CircularDependenciesException;
 import ru.ckateptb.commons.ioc.exception.IoCBeanNotFound;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Getter
 public class BeanProcessor {
     private final Class<?> clazz;
     private final String qualifier;
-    private Constructor<?> constructor;
     private final BeanProcessor[] constructorParameters;
+    private Constructor<?> constructor;
 
     public BeanProcessor(Class<?> clazz) throws CircularDependenciesException, IoCBeanNotFound {
         this(clazz, null);
@@ -62,9 +63,10 @@ public class BeanProcessor {
         }
         this.constructorParameters = list.toArray(BeanProcessor[]::new);
     }
+
     @SneakyThrows
     public Object register() {
-        if(IoC.has(clazz, qualifier)) return IoC.get(clazz, qualifier);
+        if (IoC.has(clazz, qualifier)) return IoC.get(clazz, qualifier);
         constructor.setAccessible(true);
         Object value = constructor.newInstance(Arrays.stream(constructorParameters).map(BeanProcessor::register).toArray());
         IoC.register(clazz, qualifier, value);
