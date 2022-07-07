@@ -22,10 +22,7 @@ public class IoC {
     private final static Map<Class<?>, Class<?>> classImplementations = new HashMap<>();
 
     public static void scan(Object main, Object... beans) throws IOException, IoCBeanNotFound, CircularDependenciesException {
-        scan(main, packageName -> {
-            System.out.println(packageName);
-            return true;
-        }, beans);
+        scan(main, packageName -> true, beans);
     }
 
     public static void scan(Object main, Predicate<String> filter, Object... beans) throws IOException, IoCBeanNotFound, CircularDependenciesException {
